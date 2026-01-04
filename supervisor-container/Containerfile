@@ -1,0 +1,21 @@
+#supervisor-container/Containerfile
+FROM ubuntu:22.04
+
+# System deps
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip python3-venv \
+    curl git bash \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python env
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Python deps
+RUN pip install --upgrade pip && \
+    pip install requests
+
+# Directories
+RUN mkdir -p /workspace /tools /logs /supervisor
+
+WORKDIR /workspace
