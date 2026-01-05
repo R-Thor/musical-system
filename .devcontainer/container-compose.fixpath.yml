@@ -1,0 +1,45 @@
+#.devcontainer/container-compose.yml
+version: "3.9"
+
+services:
+  model-server:
+    build:
+      context: ../model-container
+      dockerfile: Containerfile
+    image: localhost/ai-model:latest
+    container_name: ai-model
+    networks:
+      - ai-net
+    volumes:
+      - model-data:/models:ro
+    command: >
+      bash -c "./build/bin/llama-server
+      -m /models/llama-3.2-3b-instruct.gguf
+      --port 8080
+      --host 0.0.0.0"
+    ports:
+      - "8080:8080"
+
+  supervisor:
+    build:
+      context: ../supervisor-container
+      dockerfile: Containerfile
+    container_name: ai-supervisor
+    networks:
+      - ai-net
+    volumes:
+      - workspace:/workspace
+      - logs:/logs
+    environment:
+      MODEL_URL: "http://ai-model:8080"
+    depends_on:
+      - model-server
+
+networks:
+  ai-net:
+
+volumes:
+  model-data:
+  workspace:
+  logs:
+

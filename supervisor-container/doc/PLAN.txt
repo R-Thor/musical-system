@@ -1,0 +1,99 @@
+===============================================================================
+AI SANDBOX ENVIRONMENT - MASTER PLAN
+===============================================================================
+Created: 2026-01-04T22:15:00Z
+
+1. GOALS
+   - Define a reproducible, deterministic AI sandbox environment.
+   - Use Debian WSL as the control plane.
+   - Use Podman Machine as the container host.
+   - Use Docker Compose v2 (official plugin).
+   - Integrate cleanly with VS Code.
+   - Maintain a modular repo structure for model, supervisor, tools, and logs.
+   - Ensure future onboarding is trivial and unambiguous.
+
+2. ARCHITECTURE OVERVIEW
+   - Debian WSL:
+       Acts as the control plane.
+       Hosts Podman CLI and Docker Compose v2.
+       Hosts VS Code remote environment.
+   - Podman Machine:
+       Runs all containers.
+       Provides stable networking and volume behavior.
+       Acts as the actual Linux container host.
+   - VS Code:
+       Connects to Debian WSL.
+       Uses Docker extension to communicate with Podman socket.
+       Supports devcontainers without hacks.
+
+3. DRIFT PREVENTION
+   - The PLAN file is the authoritative source of truth for architecture.
+   - All implementation steps must align with this document unless explicitly revised.
+   - Any deviation must be logged in the Issue Log with:
+       * reason for deviation
+       * steps taken
+       * final resolution
+   - Implementation Notes record actual actions taken, preventing silent drift.
+   - Implementation Instructions are updated only after issues are resolved.
+   - If architectural uncertainty arises, reset alignment to this PLAN.
+   - New drift risks discovered during implementation will be added here.
+
+4. MIGRATION PLAN
+   Phase 1: Prepare Debian WSL
+       - Install Podman CLI.
+       - Install Docker Compose v2 plugin.
+       - Validate versions and paths.
+
+   Phase 2: Initialize Podman Machine
+       - Create Podman Machine (Fedora CoreOS recommended).
+       - Start machine and verify socket exposure.
+       - Validate container networking and port forwarding.
+
+   Phase 3: Adapt Repository
+       - Update container-compose.yml for Podman Machine.
+       - Update devcontainer.json for Podman integration.
+       - Validate build contexts and volume mounts.
+
+   Phase 4: Validate Environment
+       - Build model container.
+       - Build supervisor container.
+       - Confirm inter-container communication.
+       - Confirm VS Code devcontainer behavior.
+
+   Phase 5: Documentation
+       - Update README to reflect new architecture.
+       - Maintain Implementation Notes with Zulu timestamps.
+       - Maintain Issue Log with steps and resolutions.
+       - Update Implementation Instructions as the canonical guide.
+
+5. COMPONENTS
+   - Model Container:
+       llama.cpp build and inference server.
+   - Supervisor Container:
+       Python agent loop, tools, logs, workspace.
+   - Devcontainer:
+       VS Code environment for supervisor development.
+   - Compose Orchestration:
+       Defines model-server and supervisor services.
+   - Volumes:
+       model-data, workspace, logs.
+   - Network:
+       ai-net.
+
+6. MILESTONES
+   - Debian WSL prepared.
+   - Podman Machine initialized.
+   - Compose file adapted.
+   - Devcontainer validated.
+   - Model and supervisor containers running.
+   - End-to-end test successful.
+
+7. OPEN QUESTIONS
+   - Final choice of Podman Machine base image.
+   - Volume labeling requirements (:Z or :z).
+   - Whether to add a tools container in the future.
+   - Whether to add a dedicated logs processor.
+
+===============================================================================
+END OF PLAN
+===============================================================================
