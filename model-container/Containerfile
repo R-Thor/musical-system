@@ -17,6 +17,12 @@ RUN mkdir -p /opt/llama.cpp/build && \
 
 # Model directory
 RUN mkdir -p /models
+
+# Download model
+RUN curl -L \
+  -o /models/llama-3.2-3b-instruct.gguf \
+  https://huggingface.co/.../llama-3.2-3b-instruct.gguf
+
 VOLUME ["/models"]
 
 WORKDIR /opt/llama.cpp

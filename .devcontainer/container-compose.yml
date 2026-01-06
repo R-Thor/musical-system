@@ -9,8 +9,6 @@ services:
     container_name: ai-model
     networks:
       - ai-net
-    volumes:
-      - model-data:/models:ro
     command: >
       bash -c "/opt/llama.cpp/build/bin/llama-server
       -m /models/llama-3.2-3b-instruct.gguf
@@ -18,6 +16,7 @@ services:
       --host 0.0.0.0"
     ports:
       - "8080:8080"
+
 
   supervisor:
     build:
