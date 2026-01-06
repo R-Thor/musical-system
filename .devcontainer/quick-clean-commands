@@ -1,0 +1,1 @@
+podman container rm -a; podman image rm -a -f; podman volume rm -a; podman network prune
