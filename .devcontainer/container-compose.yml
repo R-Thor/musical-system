@@ -12,7 +12,7 @@ services:
     volumes:
       - model-data:/models:ro
     command: >
-      bash -c "./llama.cpp/main
+      bash -c "/opt/llama.cpp/build/bin/llama-server
       -m /models/llama-3.2-3b-instruct.gguf
       --port 8080
       --host 0.0.0.0"
